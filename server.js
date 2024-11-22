@@ -7,18 +7,19 @@ const httpServer = createServer(app);
 const PORT = process.env.PORT || 3000;
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://zephyr-ktqp.onrender.com", //Update to your frontend origin
+    origin: "https://zephyr-ktqp.onrender.com",
   },
 });
 
 io.on("connection", (socket) => {
   console.log("a user connected");
+  socket.broadcast.emit("connected", `user with id: ${socket.id} connected`);
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
-  socket.on("chat message", (msg) => {
+  socket.on("chat-message", (msg) => {
     console.log("message: " + msg);
-    io.emit("chat message", msg); //Broadcasts to all connected clients
+    socket.broadcast.emit("chat-message", msg);
   });
   socket.on("join", (room) => {
     socket.join(room);
