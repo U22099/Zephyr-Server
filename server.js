@@ -19,21 +19,29 @@ const io = new Server(httpServer, {
   },
 });
 
+const globalOnlineUsers = new Map();
+
 io.on("connection", (socket) => {
-  console.log("a user connected");
-  socket.broadcast.emit("connected", `user with id: ${socket.id} connected`);
+  socket.on("add-user", (userId) => {
+    globalOnlineUsers.set(userId, socket.id);
+  });
+
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    globalOnlineUsers.forEach((value, key) => {
+      if (value === socket.id) {
+        globalOnlineUsers.delete(key);
+      }
+    });
   });
-  socket.on("chat-message", (msg) => {
-    console.log("message: " + msg);
-    socket.broadcast.emit("chat-message", msg);
-  });
-  socket.on("join", (room) => {
-    socket.join(room);
-    console.log("user joined room", room);
+
+  socket.on("send-message", (data) => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("recieve-message", data.data);
+    }
   });
 });
+
 
 httpServer.listen(PORT, () => {
   console.log("listening on Port: "+PORT);
