@@ -22,9 +22,14 @@ const io = new Server(httpServer, {
 const globalOnlineUsers = new Map();
 
 io.on("connection", (socket) => {
+  
   socket.on("add-user", (userId) => {
     globalOnlineUsers.set(userId, socket.id);
   });
+  
+  socket.on("join-group", id => {
+    socket.join(id);
+  })
 
   socket.on("disconnect", () => {
     globalOnlineUsers.forEach((value, key) => {
@@ -40,6 +45,10 @@ io.on("connection", (socket) => {
       io.to(recipientSocketId).emit("recieve-message", data.data);
     }
   });
+  
+  socket.on("group-send-message", data => {
+    io.to(data.groupId).emit("group-recieve-message", data.data);
+  })
 });
 
 
