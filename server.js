@@ -22,11 +22,11 @@ const io = new Server(httpServer, {
 const globalOnlineUsers = new Map();
 
 io.on("connection", (socket) => {
-  
+
   socket.on("add-user", (userId) => {
     globalOnlineUsers.set(userId, socket.id);
   });
-  
+
   socket.on("join-group", id => {
     socket.join(id);
   })
@@ -45,13 +45,32 @@ io.on("connection", (socket) => {
       io.to(recipientSocketId).emit("recieve-message", data.data);
     }
   });
-  
+
   socket.on("group-send-message", data => {
     io.to(data.groupId).emit("group-recieve-message", data.data);
-  })
+  });
+
+  socket.on("outgoing-voice-call", data => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("incoming-voice-call", {
+        uid: data.uid,
+      });
+    }
+  });
+
+  socket.on("outgoing-video-call", data => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("incoming-video-call", {
+        uid: data.uid,
+      });
+    }
+  });
+  
 });
 
 
 httpServer.listen(PORT, () => {
-  console.log("listening on Port: "+PORT);
+  console.log("listening on Port: " + PORT);
 });
