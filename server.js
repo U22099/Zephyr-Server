@@ -67,7 +67,34 @@ io.on("connection", (socket) => {
       });
     }
   });
-  
+
+  socket.on("voice-call-accepted", data => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("voice-call-accepted", data);
+    }
+  });
+
+  socket.on("video-call-accepted", data => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("video-call-accepted", data);
+    }
+  });
+
+  socket.on("voice-call-rejected", data => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("voice-call-rejected", data);
+    }
+  });
+
+  socket.on("video-call-rejected", data => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("video-call-rejected", data);
+    }
+  });
 });
 
 
