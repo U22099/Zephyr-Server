@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("group-send-message", data => {
-    socket.broadcast.to(data.groupId).emit("group-recieve-message", {...data.data, groupId: data.groupId});
+    socket.broadcast.to(data.groupId).emit("group-recieve-message", data.data);
   });
 
   socket.on("outgoing-voice-call", data => {
