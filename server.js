@@ -39,6 +39,13 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("get-user-active-status", (data) => {
+    const recipientSocketId = globalOnlineUsers.get(data.id);
+    if (recipientSocketId) {
+      socket.emit("recieve-user-active-status", data.id);
+    }
+  });
+
   socket.on("send-message", (data) => {
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
