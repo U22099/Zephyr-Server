@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
     const recipientSocketId = globalOnlineUsers.get(data.id);
     if (recipientSocketId) {
       socket.emit("recieve-user-active-status", data.id);
-    }
+    } else socket.emit("recieve-user-active-status", null);
   });
 
   socket.on("send-message", (data) => {
@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("group-send-message", data => {
-    io.to(data.groupId).emit("group-recieve-message", data.data);
+    socket.broadcast.to(data.groupId).emit("group-recieve-message", data.data);
   });
 
   socket.on("outgoing-voice-call", data => {
