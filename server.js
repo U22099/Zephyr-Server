@@ -22,7 +22,7 @@ const io = new Server(httpServer, {
 const globalOnlineUsers = new Map();
 
 io.on("connection", (socket) => {
-
+  socket.emit("connection", socket.id);
   socket.on("add-user", (userId) => {
     globalOnlineUsers.set(userId, socket.id);
   });
