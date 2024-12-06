@@ -63,7 +63,7 @@ io.on("connection", (socket) => {
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("incoming-voice-call", {
-        uid: data.uid,
+        data
       });
     }
   });
@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("incoming-video-call", {
-        uid: data.uid,
+        data
       });
     }
   });
