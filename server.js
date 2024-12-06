@@ -62,18 +62,14 @@ io.on("connection", (socket) => {
   socket.on("outgoing-voice-call", data => {
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
-      io.to(recipientSocketId).emit("incoming-voice-call", {
-        data
-      });
+      io.to(recipientSocketId).emit("incoming-voice-call", data);
     }
   });
 
   socket.on("outgoing-video-call", data => {
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
-      io.to(recipientSocketId).emit("incoming-video-call", {
-        data
-      });
+      io.to(recipientSocketId).emit("incoming-video-call", data);
     }
   });
 
