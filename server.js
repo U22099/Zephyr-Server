@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("group-outgoing-video-call", data => {
-    socket.broadcast.to(data.to).emit("group-incoming-voice-call", data);
+    socket.broadcast.to(data.to).emit("group-incoming-video-call", data);
   });
 });
 
