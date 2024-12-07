@@ -22,9 +22,9 @@ const io = new Server(httpServer, {
 const globalOnlineUsers = new Map();
 
 io.on("connection", (socket) => {
-  
+
   socket.emit("connection", socket.id);
-  
+
   socket.on("add-user", (userId) => {
     globalOnlineUsers.set(userId, socket.id);
   });
@@ -73,32 +73,12 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("voice-call-accepted", data => {
-    const recipientSocketId = globalOnlineUsers.get(data.to);
-    if (recipientSocketId) {
-      io.to(recipientSocketId).emit("voice-call-accepted", data);
-    }
+  socket.on("group-outgoing-voice-call", data => {
+    socket.broadcast.to(data.to).emit("group-incoming-voice-call", data);
   });
 
-  socket.on("video-call-accepted", data => {
-    const recipientSocketId = globalOnlineUsers.get(data.to);
-    if (recipientSocketId) {
-      io.to(recipientSocketId).emit("video-call-accepted", data);
-    }
-  });
-
-  socket.on("voice-call-rejected", data => {
-    const recipientSocketId = globalOnlineUsers.get(data.to);
-    if (recipientSocketId) {
-      io.to(recipientSocketId).emit("voice-call-rejected", data);
-    }
-  });
-
-  socket.on("video-call-rejected", data => {
-    const recipientSocketId = globalOnlineUsers.get(data.to);
-    if (recipientSocketId) {
-      io.to(recipientSocketId).emit("video-call-rejected", data);
-    }
+  socket.on("group-outgoing-video-call", data => {
+    socket.broadcast.to(data.to).emit("group-incoming-voice-call", data);
   });
 });
 
