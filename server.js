@@ -61,7 +61,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("outgoing-voice-call", data => {
-    globalOngoingCall.set(data.to, data);
+    globalOngoingCall.set(data.to, {
+      ...data,
+      callType: "voice"
+    });
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("incoming-voice-call", data);
@@ -69,7 +72,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("outgoing-video-call", data => {
-    globalOngoingCall.set(data.to, data);
+    globalOngoingCall.set(data.to, {
+      ...data,
+      callType: "video"
+    });
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("incoming-video-call", data);
@@ -77,12 +83,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("group-outgoing-voice-call", data => {
-    globalOngoingCall.set(data.to, data);
+    globalOngoingCall.set(data.to, {
+      ...data,
+      callType: "voice"
+    });
     socket.broadcast.to(data.to).emit("group-incoming-voice-call", data);
   });
 
   socket.on("group-outgoing-video-call", data => {
-    globalOngoingCall.set(data.to, data);
+    globalOngoingCall.set(data.to, {
+      ...data,
+      callType: "video"
+    });
     socket.broadcast.to(data.to).emit("group-incoming-video-call", data);
   });
   
