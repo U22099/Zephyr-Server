@@ -97,16 +97,30 @@ io.on("connection", (socket) => {
     });
     socket.broadcast.to(data.to).emit("group-incoming-video-call", data);
   });
-  
+
   socket.on("ongoing-call-check", uid => {
     const ongoingCallData = globalOngoingCall.get(uid);
-    if(ongoingCallData){
+    if (ongoingCallData) {
       socket.emit("ongoing-call-confirm", ongoingCallData);
     }
   });
-  
+
   socket.on("call-ended", uid => {
     globalOngoingCall.delete(uid);
+  });
+
+  socket.on("typing-status-on", (data) => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("typing-status-on", data);
+    }
+  });
+
+  socket.on("typing-status-off ", (data) => {
+    const recipientSocketId = globalOnlineUsers.get(data.to);
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("typing-status-off", data);
+    }
   });
 });
 
