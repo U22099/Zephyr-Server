@@ -110,6 +110,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("typing-status-on", (data) => {
+    if (data.type === "group") {
+      socket.broadcast.to(data.to).emit("typing-status-on", data);
+      return;
+    }
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("typing-status-on", data);
@@ -117,6 +121,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("typing-status-off ", (data) => {
+    if (data.type === "group") {
+      socket.broadcast.to(data.to).emit("typing-status-off", data);
+      return;
+    }
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("typing-status-off", data);
