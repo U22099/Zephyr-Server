@@ -100,9 +100,8 @@ io.on("connection", (socket) => {
 
   socket.on("ongoing-call-check", uid => {
     const ongoingCallData = globalOngoingCall.get(uid);
-    console.log(globalOngoingCall)
     if (ongoingCallData) {
-      socket.emit("ongoing-call-confirm", ongoingCallData);
+      socket.emit("ongoing-call-confirmed", ongoingCallData);
     }
   });
 
