@@ -52,12 +52,12 @@ io.on("connection", (socket) => {
   socket.on("send-message", (data) => {
     const recipientSocketId = globalOnlineUsers.get(data.to);
     if (recipientSocketId) {
-      io.to(recipientSocketId).emit("recieve-message", data.data);
+      io.to(recipientSocketId).emit("recieve-message", {...data.data, name: data.name});
     }
   });
 
   socket.on("group-send-message", data => {
-    socket.broadcast.to(data.groupId).emit("group-recieve-message", data.data);
+    socket.broadcast.to(data.groupId).emit("group-recieve-message", {...data.data, name: data.name, groupId: data.groupId});
   });
 
   socket.on("outgoing-voice-call", data => {
