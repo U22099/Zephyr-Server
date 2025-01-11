@@ -121,7 +121,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("typing-status-off", (data) => {
-    console.log("recieved")
     if (data.type === "group") {
       socket.broadcast.to(data.to).emit("typing-status-off", data);
       return;
